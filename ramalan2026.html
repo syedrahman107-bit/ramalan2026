@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Iftar 2026</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap');
+  :root {
+    --bg:#080810; --card:#11111c; --card2:#18182a;
+    --border:#22223a; --border2:#2c2c48;
+    --green:#00e676; --green-dim:#00e67610; --green-border:#00e67625;
+    --yellow:#ffab00; --yellow-dim:#ffab0010; --yellow-border:#ffab0025;
+    --red:#ff5252; --red-dim:#ff525210; --red-border:#ff525225;
+    --text:#f0f0ff; --muted:#4a4a6a; --muted2:#7070a0;
+    --accent:#7c6af7; --accent2:#b39dff; --pink:#f72585;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  body { background:var(--bg); color:var(--text); font-family:'DM Sans','Segoe UI',sans-serif; min-height:100vh; padding:0 0 60px; overflow-x:hidden; }
+  .bg-blob { position:fixed; border-radius:50%; filter:blur(80px); pointer-events:none; z-index:0; animation:blobMove 8s ease-in-out infinite alternate; }
+  .bg-blob-1 { width:400px; height:400px; top:-100px; right:-100px; background:#7c6af718; }
+  .bg-blob-2 { width:300px; height:300px; bottom:100px; left:-100px; background:#00e67610; animation-delay:2s; }
+  .bg-blob-3 { width:250px; height:250px; top:50%; left:40%; background:#f7258510; animation-delay:4s; }
+  @keyframes blobMove { 0%{transform:translate(0,0) scale(1);} 100%{transform:translate(20px,30px) scale(1.1);} }
+  body::before { content:''; position:fixed; inset:0; background-image:linear-gradient(rgba(124,106,247,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(124,106,247,0.03) 1px,transparent 1px); background-size:40px 40px; pointer-events:none; z-index:0; }
+  .wrap { max-width:500px; margin:0 auto; padding:0 16px; position:relative; z-index:1; }
+
+  /* Header */
+  .header { padding:36px 0 20px; }
+  .header-row { display:flex; align-items:flex-start; justify-content:space-between; gap:12px; }
+  .header-left { flex:1; }
+  h1 { font-family:'Syne','Arial Black',sans-serif; font-size:clamp(32px,9vw,48px); font-weight:800; line-height:1.0; letter-spacing:-1px; background:linear-gradient(135deg,#ffffff 0%,#b39dff 50%,#00e676 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+  .header-date { font-size:11px; color:var(--muted2); margin-top:6px; }
+
+  /* Live indicator */
+  .live-badge { display:inline-flex; align-items:center; gap:5px; font-size:9px; letter-spacing:2px; text-transform:uppercase; color:var(--green); font-weight:700; margin-top:6px; }
+  .live-dot { width:6px; height:6px; border-radius:50%; background:var(--green); box-shadow:0 0 6px var(--green); animation:pulse 1.5s ease-in-out infinite; }
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1);} 50%{opacity:0.5;transform:scale(1.3);} }
+
+  /* UPI Button */
+  .upi-fab { display:flex; flex-direction:column; align-items:center; gap:5px; background:var(--card); border:1px solid var(--green-border); border-radius:16px; padding:8px; cursor:pointer; flex-shrink:0; box-shadow:0 0 20px #00e67620; transition:all 0.2s; margin-top:4px; }
+  .upi-fab:hover { transform:translateY(-2px); box-shadow:0 6px 25px #00e67635; }
+  .upi-fab:active { transform:scale(0.95); }
+  .qr-thumb { width:60px; height:60px; background:#fff; border-radius:10px; display:flex; align-items:center; justify-content:center; overflow:hidden; }
+  .qr-thumb canvas,.qr-thumb img { width:100% !important; height:100% !important; }
+  .upi-fab-label { font-size:9px; letter-spacing:2px; text-transform:uppercase; color:var(--green); font-weight:700; font-family:'Syne',sans-serif; }
+
+  /* Stats */
+  .stats { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin:22px 0 10px; }
+  .stat { background:var(--card); border:1px solid var(--border); border-radius:18px; padding:16px 12px; display:flex; flex-direction:column; gap:6px; position:relative; overflow:hidden; transition:transform 0.2s; }
+  .stat:hover { transform:translateY(-2px); }
+  .stat::after { content:''; position:absolute; top:0; left:0; right:0; height:2px; background:linear-gradient(90deg,transparent,var(--accent),transparent); opacity:0.5; }
+  .stat.s-rcvd { border-color:var(--green-border); background:linear-gradient(135deg,var(--green-dim),var(--card)); }
+  .stat.s-rcvd::after { background:linear-gradient(90deg,transparent,var(--green),transparent); }
+  .stat.s-pend { border-color:var(--yellow-border); background:linear-gradient(135deg,var(--yellow-dim),var(--card)); }
+  .stat.s-pend::after { background:linear-gradient(90deg,transparent,var(--yellow),transparent); }
+  .stat-lbl { font-size:8px; letter-spacing:2.5px; text-transform:uppercase; color:var(--muted2); font-weight:600; }
+  .stat-val { font-family:'Syne','Arial Black',sans-serif; font-weight:800; font-size:clamp(14px,4vw,22px); line-height:1; }
+  .stat.s-rcvd .stat-val { color:var(--green); }
+  .stat.s-pend .stat-val { color:var(--yellow); }
+  .stat-sub { font-size:10px; color:var(--muted2); }
+
+  /* Balance */
+  .balance-card { background:var(--card); border:1px solid var(--border2); border-radius:18px; padding:20px; margin:10px 0 20px; display:grid; grid-template-columns:1fr 1fr; position:relative; overflow:hidden; }
+  .balance-card::before { content:''; position:absolute; inset:0; background:linear-gradient(135deg,#7c6af712 0%,#f7258508 50%,transparent 100%); pointer-events:none; }
+  .balance-card::after { content:''; position:absolute; top:0; left:0; right:0; height:1px; background:linear-gradient(90deg,transparent,var(--accent2),var(--pink),transparent); opacity:0.4; }
+  .bal-item { display:flex; flex-direction:column; gap:5px; padding:0 6px; }
+  .bal-item+.bal-item { border-left:1px solid var(--border2); padding-left:20px; }
+  .bal-lbl { font-size:8px; letter-spacing:2.5px; text-transform:uppercase; color:var(--muted2); font-weight:600; }
+  .bal-val { font-family:'Syne','Arial Black',sans-serif; font-weight:800; font-size:clamp(18px,5vw,28px); }
+  .bal-val.v-exp { color:var(--red); }
+  .bal-val.v-bal { color:var(--accent2); }
+  .bal-val.v-bal.negative { color:var(--red); }
+  .bal-sub { font-size:10px; color:var(--muted2); }
+
+  /* Section headers */
+  .section-hd { display:flex; align-items:center; gap:8px; font-size:9px; letter-spacing:3px; text-transform:uppercase; color:var(--muted2); margin-bottom:10px; padding-left:2px; font-weight:700; }
+  .section-hd .dot { width:7px; height:7px; border-radius:50%; background:currentColor; flex-shrink:0; box-shadow:0 0 8px currentColor; }
+  .section-hd.rcvd-hd { color:var(--green); }
+  .section-hd.pend-hd { color:var(--yellow); }
+  .section-hd.exp-hd { color:var(--red); }
+
+  /* Cards */
+  .list { display:flex; flex-direction:column; gap:8px; margin-bottom:24px; }
+  .person { background:var(--card); border:1px solid var(--border); border-radius:16px; padding:14px; display:flex; align-items:center; gap:12px; cursor:pointer; user-select:none; transition:all 0.2s; animation:slideUp 0.4s ease both; }
+  .person:hover { transform:translateX(4px); }
+  .person:active { transform:scale(0.98); }
+  .person.is-rcvd { border-left:2px solid var(--green); background:linear-gradient(135deg,var(--green-dim),var(--card)); border-color:var(--green-border); }
+  .person.is-pend { border-left:2px solid var(--yellow); background:linear-gradient(135deg,var(--yellow-dim),var(--card)); border-color:var(--yellow-border); }
+  .exp-row { border:1px solid var(--red-border); border-left:2px solid var(--red); background:linear-gradient(135deg,var(--red-dim),var(--card)); border-radius:16px; padding:14px; display:flex; align-items:center; gap:12px; animation:slideUp 0.4s ease both; }
+  @keyframes slideUp { from{opacity:0;transform:translateY(12px);} to{opacity:1;transform:translateY(0);} }
+
+  .ava { width:38px; height:38px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-family:'Syne',sans-serif; font-weight:800; font-size:13px; flex-shrink:0; }
+  .is-rcvd .ava { background:#00e67620; color:var(--green); border:1px solid #00e67630; }
+  .is-pend .ava { background:#ffab0018; color:var(--yellow); border:1px solid #ffab0028; }
+  .exp-icon { width:38px; height:38px; border-radius:12px; background:#ff525218; color:var(--red); border:1px solid #ff525228; display:flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0; }
+  .pinfo,.exp-info { flex:1; min-width:0; }
+  .pname,.exp-name { font-family:'Syne',sans-serif; font-weight:700; font-size:13.5px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .ploc,.exp-date { font-size:11px; color:var(--muted2); margin-top:2px; }
+  .pright,.exp-right { text-align:right; flex-shrink:0; display:flex; flex-direction:column; align-items:flex-end; gap:4px; }
+  .pamount { font-family:'Syne',sans-serif; font-weight:800; font-size:15px; }
+  .is-rcvd .pamount { color:var(--green); }
+  .is-pend .pamount { color:var(--yellow); }
+  .exp-amount { font-family:'Syne',sans-serif; font-weight:800; font-size:15px; color:var(--red); }
+  .pbadge,.exp-cat { font-size:8px; letter-spacing:1.5px; text-transform:uppercase; padding:3px 8px; border-radius:99px; font-weight:700; }
+  .is-rcvd .pbadge { background:#00e67618; color:var(--green); border:1px solid #00e67628; }
+  .is-pend .pbadge { background:#ffab0015; color:var(--yellow); border:1px solid #ffab0025; }
+  .exp-cat { background:#ff525215; color:var(--red); border:1px solid #ff525225; }
+  .pdel { width:24px; height:24px; border-radius:7px; background:transparent; border:1px solid transparent; color:var(--muted); cursor:pointer; font-size:11px; display:flex; align-items:center; justify-content:center; transition:all 0.15s; flex-shrink:0; }
+  .pdel:hover { background:#ff525215; border-color:#ff525228; color:var(--red); }
+
+  /* Add buttons */
+  .add-row { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:24px; }
+  .add-btn { display:flex; align-items:center; justify-content:center; gap:8px; width:100%; background:transparent; border:1.5px dashed var(--border2); border-radius:16px; padding:14px 10px; color:var(--muted2); font-family:'DM Sans',sans-serif; font-size:12px; cursor:pointer; transition:all 0.2s; font-weight:500; }
+  .add-btn.add-member:hover { border-color:var(--accent); color:var(--accent2); background:#7c6af710; }
+  .add-btn.add-expense:hover { border-color:var(--red); color:var(--red); background:#ff525210; }
+  .add-btn .plus { font-size:20px; font-weight:300; line-height:1; }
+
+  /* Loading */
+  .loading { text-align:center; padding:40px 20px; color:var(--muted2); font-size:13px; }
+  .spinner { width:28px; height:28px; border:2px solid var(--border2); border-top-color:var(--green); border-radius:50%; animation:spin 0.8s linear infinite; margin:0 auto 12px; }
+  @keyframes spin { to{transform:rotate(360deg);} }
+
+  /* Modal */
+  .modal-bg { position:fixed; inset:0; background:#00000088; backdrop-filter:blur(12px); z-index:100; display:flex; align-items:flex-end; justify-content:center; opacity:0; pointer-events:none; transition:opacity 0.25s; }
+  .modal-bg.open { opacity:1; pointer-events:all; }
+  .modal { background:var(--card2); border:1px solid var(--border2); border-top:1px solid #ffffff15; border-radius:28px 28px 0 0; padding:24px 20px 44px; width:100%; max-width:500px; transform:translateY(40px); transition:transform 0.35s cubic-bezier(0.34,1.56,0.64,1); position:relative; overflow:hidden; }
+  .modal::before { content:''; position:absolute; top:0; left:0; right:0; height:1px; background:linear-gradient(90deg,transparent,var(--accent2),var(--pink),transparent); opacity:0.6; }
+  .modal-bg.open .modal { transform:translateY(0); }
+  .modal-handle { width:40px; height:4px; background:var(--border2); border-radius:99px; margin:0 auto 22px; }
+  .modal-title { font-family:'Syne',sans-serif; font-weight:800; font-size:20px; margin-bottom:22px; }
+  .modal-title.exp-title { color:var(--red); }
+  .modal-title.upi-title { color:var(--green); }
+  .field { margin-bottom:14px; }
+  .field label { font-size:10px; letter-spacing:2px; text-transform:uppercase; color:var(--muted2); display:block; margin-bottom:7px; font-weight:600; }
+  .field input,.field select { width:100%; background:var(--bg); border:1px solid var(--border2); border-radius:14px; padding:13px 15px; color:var(--text); font-family:'DM Sans',sans-serif; font-size:14px; outline:none; transition:border-color 0.2s,box-shadow 0.2s; -webkit-appearance:none; appearance:none; }
+  .field input:focus { border-color:var(--accent); box-shadow:0 0 0 3px #7c6af715; }
+  .field input.exp-focus:focus { border-color:var(--red); box-shadow:0 0 0 3px #ff525215; }
+  .field input::placeholder { color:var(--muted); }
+  .modal-row { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  .modal-actions { display:flex; gap:10px; margin-top:22px; }
+  .btn-cancel { flex:1; background:transparent; border:1px solid var(--border2); border-radius:14px; padding:14px; color:var(--muted2); font-family:'DM Sans',sans-serif; font-size:14px; cursor:pointer; transition:all 0.15s; }
+  .btn-cancel:hover { border-color:#555; color:var(--text); }
+  .btn-save { flex:2; background:linear-gradient(135deg,var(--accent),#9b8af7); border:none; border-radius:14px; padding:14px; color:#fff; font-family:'Syne',sans-serif; font-weight:800; font-size:14px; cursor:pointer; transition:all 0.15s; }
+  .btn-save:hover { opacity:0.9; transform:translateY(-1px); }
+  .btn-save.exp-btn { background:linear-gradient(135deg,var(--red),#ff7b72); }
+  .btn-save:active { transform:scale(0.98); }
+
+  /* UPI modal */
+  .upi-modal-body { display:flex; align-items:center; gap:18px; background:var(--bg); border:1px solid var(--border2); border-radius:16px; padding:18px; }
+  .upi-modal-left { flex:1; display:flex; flex-direction:column; gap:7px; }
+  .upi-modal-name { font-family:'Syne',sans-serif; font-weight:800; font-size:20px; }
+  .upi-modal-id { font-size:12px; color:var(--accent2); font-weight:500; word-break:break-all; }
+  .upi-modal-hint { font-size:10px; color:var(--muted2); }
+  .upi-open-btn { display:inline-flex; align-items:center; gap:6px; margin-top:4px; background:linear-gradient(135deg,#00e676,#00c853); color:#000; font-family:'Syne',sans-serif; font-weight:800; font-size:12px; padding:10px 16px; border-radius:99px; text-decoration:none; transition:all 0.2s; box-shadow:0 4px 15px #00e67630; width:fit-content; border:none; cursor:pointer; }
+  .upi-modal-right { display:flex; flex-direction:column; align-items:center; gap:6px; flex-shrink:0; }
+  .qr-big { width:110px; height:110px; background:#fff; border-radius:12px; padding:5px; display:flex; align-items:center; justify-content:center; box-shadow:0 0 25px #00e67630; }
+  .qr-big canvas,.qr-big img { width:100% !important; height:100% !important; }
+  .qr-scan-lbl { font-size:9px; letter-spacing:2px; text-transform:uppercase; color:var(--green); font-weight:700; }
+
+  .toast { position:fixed; bottom:30px; left:50%; transform:translateX(-50%) translateY(10px); padding:11px 24px; border-radius:99px; font-size:13px; font-weight:600; white-space:nowrap; opacity:0; pointer-events:none; transition:opacity 0.25s,transform 0.25s; z-index:200; }
+  .toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+  .empty { text-align:center; padding:20px; color:var(--muted2); font-size:13px; }
+  select option { background:#18182a; }
+</style>
+</head>
+<body>
+<div class="bg-blob bg-blob-1"></div>
+<div class="bg-blob bg-blob-2"></div>
+<div class="bg-blob bg-blob-3"></div>
+
+<div class="wrap">
+  <div class="header">
+    <div class="header-row">
+      <div class="header-left">
+        <h1>Iftar 2026</h1>
+        <div class="header-date" id="hdate"></div>
+        <div class="live-badge"><span class="live-dot"></span> Live</div>
+      </div>
+      <button class="upi-fab" onclick="openUPI()">
+        <div class="qr-thumb" id="qr-thumb"></div>
+        <div class="upi-fab-label">Pay</div>
+      </button>
+    </div>
+  </div>
+
+  <div class="stats">
+    <div class="stat">
+      <div class="stat-lbl">Total</div>
+      <div class="stat-val" id="s-total">—</div>
+      <div class="stat-sub" id="s-count">—</div>
+    </div>
+    <div class="stat s-rcvd">
+      <div class="stat-lbl">Received</div>
+      <div class="stat-val" id="s-rcvd">—</div>
+      <div class="stat-sub" id="s-rcvd-c">—</div>
+    </div>
+    <div class="stat s-pend">
+      <div class="stat-lbl">Pending</div>
+      <div class="stat-val" id="s-pend">—</div>
+      <div class="stat-sub" id="s-pend-c">—</div>
+    </div>
+  </div>
+
+  <div class="balance-card">
+    <div class="bal-item">
+      <div class="bal-lbl">Total Expenses</div>
+      <div class="bal-val v-exp" id="b-exp">₹0</div>
+      <div class="bal-sub" id="b-exp-c">0 items</div>
+    </div>
+    <div class="bal-item">
+      <div class="bal-lbl">Balance Left</div>
+      <div class="bal-val v-bal" id="b-bal">—</div>
+      <div class="bal-sub">received − expenses</div>
+    </div>
+  </div>
+
+  <div class="section-hd rcvd-hd"><span class="dot"></span> Received</div>
+  <div class="list" id="rcvd-list"><div class="loading"><div class="spinner"></div>Loading...</div></div>
+
+  <div class="section-hd pend-hd"><span class="dot"></span> Pending</div>
+  <div class="list" id="pend-list"></div>
+
+  <div class="section-hd exp-hd"><span class="dot"></span> Expenses</div>
+  <div class="list" id="exp-list"></div>
+
+  <div class="add-row">
+    <button class="add-btn add-member" onclick="openModal('member')"><span class="plus">+</span> Add Member</button>
+    <button class="add-btn add-expense" onclick="openModal('expense')"><span class="plus">+</span> Add Expense</button>
+  </div>
+</div>
+
+<!-- UPI Modal -->
+<div class="modal-bg" id="modal-upi" onclick="if(event.target===this)closeUPI()">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title upi-title">💳 Pay Here</div>
+    <div class="upi-modal-body">
+      <div class="upi-modal-left">
+        <div class="upi-modal-name">Afshar</div>
+        <div class="upi-modal-id">advocateafshar2009@okicici</div>
+        <div class="upi-modal-hint">Scan QR or tap to pay via UPI</div>
+        <a class="upi-open-btn" href="upi://pay?pa=advocateafshar2009@okicici&pn=Afshar&cu=INR">💳 Open UPI App</a>
+      </div>
+      <div class="upi-modal-right">
+        <div class="qr-big" id="qr-big"></div>
+        <div class="qr-scan-lbl">Scan to Pay</div>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeUPI()">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- Member Modal -->
+<div class="modal-bg" id="modal-member" onclick="if(event.target===this)closeModal('member')">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Add New Member</div>
+    <div class="modal-row">
+      <div class="field"><label>Name *</label><input type="text" id="f-name" placeholder="e.g. Ahmed" /></div>
+      <div class="field"><label>Location</label><input type="text" id="f-loc" placeholder="e.g. Dubai" /></div>
+    </div>
+    <div class="modal-row">
+      <div class="field"><label>Amount (INR) *</label><input type="number" id="f-amt" placeholder="e.g. 2000" inputmode="numeric" /></div>
+      <div class="field"><label>Status</label>
+        <select id="f-status"><option value="pending">Pending</option><option value="received">Received</option></select>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal('member')">Cancel</button>
+      <button class="btn-save" onclick="addMember()">Add Member</button>
+    </div>
+  </div>
+</div>
+
+<!-- Expense Modal -->
+<div class="modal-bg" id="modal-expense" onclick="if(event.target===this)closeModal('expense')">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title exp-title">Add Expense</div>
+    <div class="field"><label>Description *</label><input type="text" id="e-name" class="exp-focus" placeholder="e.g. Hall Booking, Food..." /></div>
+    <div class="modal-row">
+      <div class="field"><label>Amount (INR) *</label><input type="number" id="e-amt" class="exp-focus" placeholder="e.g. 5000" inputmode="numeric" /></div>
+      <div class="field"><label>Category</label>
+        <select id="e-cat">
+          <option value="General">General</option>
+          <option value="Food">🍽 Food</option>
+          <option value="Transport">🚗 Transport</option>
+          <option value="Venue">🏠 Venue</option>
+          <option value="Decoration">🎉 Decoration</option>
+          <option value="Other">📦 Other</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal('expense')">Cancel</button>
+      <button class="btn-save exp-btn" onclick="addExpense()">Add Expense</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- Firebase SDK -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getDatabase, ref, set, onValue, push, remove, update } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+const firebaseConfig = {
+  databaseURL: "https://iftar2026-6c532-default-rtdb.firebaseio.com"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+const DEFAULT_PAYMENTS = [
+  { name:"Wadood",              location:"",          amount:5000, received:true  },
+  { name:"Sameer",              location:"Dubai",     amount:1000, received:true  },
+  { name:"Basith",              location:"",          amount:500,  received:true  },
+  { name:"Mahatir",             location:"",          amount:500,  received:true  },
+  { name:"Sameer (Saleem bro)", location:"",          amount:1000, received:true  },
+  { name:"Abdul Rahman",        location:"",          amount:9000, received:false },
+  { name:"Suhail",              location:"",          amount:5000, received:false },
+  { name:"Askar",               location:"Singapore", amount:3000, received:false },
+  { name:"Wasim",               location:"",          amount:2000, received:false },
+  { name:"Hameed",              location:"",          amount:1000, received:false },
+  { name:"Younus",              location:"",          amount:2000, received:false },
+];
+
+let payments = [];
+let expenses = [];
+let qrLoaded = false;
+
+// ── Helpers ──────────────────────────────────────────────
+function fmt(n){ if(n>=1000) return "₹"+(n%1000===0?n/1000:(n/1000).toFixed(1))+"K"; return "₹"+n; }
+function initials(name){ return name.trim().split(/\s+/).map(w=>w[0]).join("").slice(0,2).toUpperCase(); }
+function catIcon(cat){ return {Food:"🍽",Transport:"🚗",Venue:"🏠",Decoration:"🎉",Other:"📦",General:"💸"}[cat]||"💸"; }
+
+function showToast(msg,bg,color){
+  const t=document.getElementById("toast");
+  t.textContent=msg; t.style.background=bg||"#00e676"; t.style.color=color||"#000";
+  t.classList.add("show"); setTimeout(()=>t.classList.remove("show"),2500);
+}
+
+// ── QR Code ──────────────────────────────────────────────
+function loadQRLib(cb){
+  if(window.QRCode){ cb(); return; }
+  const s=document.createElement("script");
+  s.src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js";
+  s.onload=cb; document.head.appendChild(s);
+}
+function generateQRs(){
+  loadQRLib(function(){
+    if(qrLoaded) return; qrLoaded=true;
+    const upiStr="upi://pay?pa=advocateafshar2009@okicici&pn=Afshar&cu=INR";
+    new QRCode(document.getElementById("qr-thumb"),{text:upiStr,width:56,height:56,colorDark:"#000",colorLight:"#fff",correctLevel:QRCode.CorrectLevel.M});
+    new QRCode(document.getElementById("qr-big"),{text:upiStr,width:100,height:100,colorDark:"#000",colorLight:"#fff",correctLevel:QRCode.CorrectLevel.M});
+  });
+}
+window.addEventListener("load", generateQRs);
+
+// ── Modals ───────────────────────────────────────────────
+window.openUPI  = ()=> document.getElementById("modal-upi").classList.add("open");
+window.closeUPI = ()=> document.getElementById("modal-upi").classList.remove("open");
+
+window.openModal = (type)=>{
+  document.getElementById("modal-"+type).classList.add("open");
+  setTimeout(()=>{ const f=document.getElementById(type==="member"?"f-name":"e-name"); if(f)f.focus(); },300);
+};
+window.closeModal = (type)=>{
+  document.getElementById("modal-"+type).classList.remove("open");
+  if(type==="member"){ ["f-name","f-loc","f-amt"].forEach(id=>document.getElementById(id).value=""); document.getElementById("f-status").value="pending"; }
+  else{ ["e-name","e-amt"].forEach(id=>document.getElementById(id).value=""); document.getElementById("e-cat").value="General"; }
+};
+
+// ── Firebase: init default data if empty ─────────────────
+onValue(ref(db,"payments"), snap=>{
+  if(!snap.exists()){
+    // First time — write default members
+    const obj={};
+    DEFAULT_PAYMENTS.forEach((p,i)=>{ obj["m"+i]=p; });
+    set(ref(db,"payments"), obj);
+  }
+}, { onlyOnce: true });
+
+// ── Firebase: listen for live changes ────────────────────
+onValue(ref(db,"payments"), snap=>{
+  payments=[];
+  if(snap.exists()){
+    snap.forEach(child=>{ payments.push({ _key:child.key, ...child.val() }); });
+  }
+  render();
+});
+
+onValue(ref(db,"expenses"), snap=>{
+  expenses=[];
+  if(snap.exists()){
+    snap.forEach(child=>{ expenses.push({ _key:child.key, ...child.val() }); });
+  }
+  render();
+});
+
+// ── Actions ──────────────────────────────────────────────
+window.addMember = ()=>{
+  const name=document.getElementById("f-name").value.trim();
+  const loc=document.getElementById("f-loc").value.trim();
+  const amt=parseInt(document.getElementById("f-amt").value);
+  const status=document.getElementById("f-status").value;
+  if(!name){ showToast("Please enter a name","#ff5252","#fff"); return; }
+  if(!amt||isNaN(amt)||amt<=0){ showToast("Please enter a valid amount","#ff5252","#fff"); return; }
+  push(ref(db,"payments"),{name,location:loc,amount:amt,received:status==="received"});
+  closeModal("member"); showToast("✅ Added "+name+"!","#00e676","#000");
+};
+
+window.addExpense = ()=>{
+  const name=document.getElementById("e-name").value.trim();
+  const amt=parseInt(document.getElementById("e-amt").value);
+  const cat=document.getElementById("e-cat").value;
+  if(!name){ showToast("Please describe the expense","#ff5252","#fff"); return; }
+  if(!amt||isNaN(amt)||amt<=0){ showToast("Please enter a valid amount","#ff5252","#fff"); return; }
+  push(ref(db,"expenses"),{name,amount:amt,category:cat,date:new Date().toLocaleDateString("en-GB",{day:"numeric",month:"short"})});
+  closeModal("expense"); showToast("Expense added!","#ff5252","#fff");
+};
+
+window.deleteMember = (key,e)=>{
+  e.stopPropagation();
+  const p=payments.find(x=>x._key===key);
+  if(p && confirm("Remove "+p.name+"?")){
+    remove(ref(db,"payments/"+key));
+    showToast("Removed "+p.name,"#ffab00","#000");
+  }
+};
+
+window.deleteExpense = (key,e)=>{
+  e.stopPropagation();
+  const ex=expenses.find(x=>x._key===key);
+  if(ex && confirm("Remove expense: "+ex.name+"?")){
+    remove(ref(db,"expenses/"+key));
+    showToast("Expense removed","#ffab00","#000");
+  }
+};
+
+window.toggleStatus = (key)=>{
+  const p=payments.find(x=>x._key===key);
+  if(p){
+    update(ref(db,"payments/"+key),{received:!p.received});
+    showToast(!p.received?"✅ Marked received":"⏳ Marked pending",!p.received?"#00e676":"#ffab00","#000");
+  }
+};
+
+// ── Render ───────────────────────────────────────────────
+function render(){
+  const rcvd=payments.filter(p=>p.received), pend=payments.filter(p=>!p.received);
+  const total=payments.reduce((s,p)=>s+p.amount,0);
+  const rcvdAmt=rcvd.reduce((s,p)=>s+p.amount,0);
+  const pendAmt=pend.reduce((s,p)=>s+p.amount,0);
+  const expAmt=expenses.reduce((s,e)=>s+e.amount,0);
+
+  document.getElementById("s-total").textContent=fmt(total);
+  document.getElementById("s-count").textContent=payments.length+" people";
+  document.getElementById("s-rcvd").textContent=fmt(rcvdAmt);
+  document.getElementById("s-rcvd-c").textContent=rcvd.length+" paid";
+  document.getElementById("s-pend").textContent=fmt(pendAmt);
+  document.getElementById("s-pend-c").textContent=pend.length+" left";
+  document.getElementById("b-exp").textContent=fmt(expAmt);
+  document.getElementById("b-exp-c").textContent=expenses.length+" item"+(expenses.length!==1?"s":"");
+  const balEl=document.getElementById("b-bal");
+  balEl.textContent=fmt(rcvdAmt-expAmt);
+  balEl.className="bal-val v-bal"+((rcvdAmt-expAmt)<0?" negative":"");
+
+  function card(p,ai){
+    const div=document.createElement("div");
+    div.className="person "+(p.received?"is-rcvd":"is-pend");
+    div.style.animationDelay=(ai*0.04)+"s";
+    div.innerHTML='<div class="ava">'+initials(p.name)+'</div>'+
+      '<div class="pinfo"><div class="pname">'+p.name+'</div><div class="ploc">'+(p.location||"—")+'</div></div>'+
+      '<div class="pright"><div class="pamount">'+fmt(p.amount)+'</div><span class="pbadge">'+(p.received?"Received":"Pending")+'</span></div>'+
+      '<button class="pdel" title="Remove">✕</button>';
+    div.querySelector(".pdel").addEventListener("click",e=>window.deleteMember(p._key,e));
+    div.addEventListener("click",function(e){ if(!e.target.classList.contains("pdel")) window.toggleStatus(p._key); });
+    return div;
+  }
+
+  function expCard(ex,ai){
+    const div=document.createElement("div");
+    div.className="exp-row"; div.style.animationDelay=(ai*0.04)+"s";
+    div.innerHTML='<div class="exp-icon">'+catIcon(ex.category)+'</div>'+
+      '<div class="exp-info"><div class="exp-name">'+ex.name+'</div><div class="exp-date">'+ex.date+'</div></div>'+
+      '<div class="exp-right"><div class="exp-amount">-'+fmt(ex.amount)+'</div><span class="exp-cat">'+ex.category+'</span></div>'+
+      '<button class="pdel" title="Remove">✕</button>';
+    div.querySelector(".pdel").addEventListener("click",e=>window.deleteExpense(ex._key,e));
+    return div;
+  }
+
+  const rl=document.getElementById("rcvd-list"), pl=document.getElementById("pend-list"), el=document.getElementById("exp-list");
+  rl.innerHTML=""; pl.innerHTML=""; el.innerHTML="";
+  if(!rcvd.length) rl.innerHTML='<div class="empty">No payments received yet</div>';
+  else rcvd.forEach((p,i)=>rl.appendChild(card(p,i)));
+  if(!pend.length) pl.innerHTML='<div class="empty">🎉 Everyone has paid!</div>';
+  else pend.forEach((p,i)=>pl.appendChild(card(p,i)));
+  if(!expenses.length) el.innerHTML='<div class="empty">No expenses added yet</div>';
+  else expenses.forEach((ex,i)=>el.appendChild(expCard(ex,i)));
+}
+
+document.getElementById("hdate").textContent = new Date().toLocaleDateString("en-US",{weekday:"long",year:"numeric",month:"long",day:"numeric"});
+</script>
+</body>
+</html>
